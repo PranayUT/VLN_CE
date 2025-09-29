@@ -4,7 +4,6 @@ fastdtw==0.3.4
 gdown
 gym>=0.17.3
 jsonlines
-lmdb
 msgpack_numpy
 networkx
 numpy>=1.16.1
@@ -13,6 +12,11 @@ torch>=1.6.0
 torchvision==0.2.2.post3
 tqdm>=4.0.0
 tensorflow==1.13.1
-tb-nightly
 yacs>=0.1.5
 Opencv-python>=3.3.0
+lmdb==1.7.3
+moviepy==1.0.3
+tb-nightly
+webdataset==0.1.40
+openai
+python-dotenv

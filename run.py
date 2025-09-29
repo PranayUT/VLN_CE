@@ -7,25 +7,16 @@ import random
 import numpy as np
 import torch
 from habitat import logger
+from habitat.datasets import make_dataset
 from habitat_baselines.common.baseline_registry import baseline_registry
-
+from vlnce_baselines.config.default import get_config
 import habitat_extensions  # noqa: F401
 import vlnce_baselines  # noqa: F401
-from vlnce_baselines.config.default import get_config
-from vlnce_baselines.nonlearning_agents import (
-    evaluate_agent,
-    nonlearning_inference,
-)
-
+from my_agent import evaluate_agent
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--run-type",
-        choices=["train", "eval", "inference"],
-        required=True,
-        help="run type of the experiment (train, eval, inference)",
-    )
+
     parser.add_argument(
         "--exp-config",
         type=str,
@@ -33,17 +24,31 @@ def main():
         help="path to config yaml containing info about experiment",
     )
     parser.add_argument(
-        "opts",
-        default=None,
-        nargs=argparse.REMAINDER,
-        help="Modify config options from command line",
+        "--split-num",
+        type=int,
+        required=True,
+        help="chunks of evaluation"
     )
+    
+    parser.add_argument(
+        "--split-id",
+        type=int,
+        required=True,
+        help="chunks ID of evaluation"
 
+    )
+    parser.add_argument(
+        "--result-path",
+        type=str,
+        required=True,
+        help="location to save results"
+
+    )
     args = parser.parse_args()
     run_exp(**vars(args))
 
 
-def run_exp(exp_config: str, run_type: str, opts=None) -> None:
+def run_exp(exp_config: str, split_num: str, split_id: str, result_path: str, opts=None) -> None:
     """Runs experiment given mode and config
 
     Args:
@@ -52,40 +57,13 @@ def run_exp(exp_config: str, run_type: str, opts=None) -> None:
         opts: list of strings of additional config options.
     """
     config = get_config(exp_config, opts)
-    logger.info(f"config: {config}")
-    logdir = "/".join(config.LOG_FILE.split("/")[:-1])
-    if logdir:
-        os.makedirs(logdir, exist_ok=True)
-    logger.add_filehandler(config.LOG_FILE)
+    dataset = make_dataset(id_dataset=config.TASK_CONFIG.DATASET.TYPE, config=config.TASK_CONFIG.DATASET)
+    dataset.episodes.sort(key=lambda ep: ep.episode_id)
+    np.random.seed(42)
+    dataset_split = dataset.get_splits(split_num)[split_id]
+    evaluate_agent(config, split_id, dataset_split, result_path)
 
-    random.seed(config.TASK_CONFIG.SEED)
-    np.random.seed(config.TASK_CONFIG.SEED)
-    torch.manual_seed(config.TASK_CONFIG.SEED)
-    torch.backends.cudnn.benchmark = False
-    torch.backends.cudnn.deterministic = False
-    if torch.cuda.is_available():
-        torch.set_num_threads(1)
 
-    if run_type == "eval":
-        torch.backends.cudnn.deterministic = True
-        if config.EVAL.EVAL_NONLEARNING:
-            evaluate_agent(config)
-            return
-
-    if run_type == "inference" and config.INFERENCE.INFERENCE_NONLEARNING:
-        nonlearning_inference(config)
-        return
-
-    trainer_init = baseline_registry.get_trainer(config.TRAINER_NAME)
-    assert trainer_init is not None, f"{config.TRAINER_NAME} is not supported"
-    trainer = trainer_init(config)
-
-    if run_type == "train":
-        trainer.train()
-    elif run_type == "eval":
-        trainer.eval()
-    elif run_type == "inference":
-        trainer.inference()
 
 
 if __name__ == "__main__":
