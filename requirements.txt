@@ -11,7 +11,6 @@ pre-commit
 torch>=1.6.0
 torchvision==0.2.2.post3
 tqdm>=4.0.0
-tensorflow==1.13.1
 yacs>=0.1.5
 Opencv-python>=3.3.0
 lmdb==1.7.3
