@@ -20,8 +20,8 @@ from habitat.utils.visualizations import fog_of_war
 from habitat.utils.visualizations import maps as habitat_maps
 from numpy import ndarray
 
-from habitat_extensions import maps
-from habitat_extensions.task import RxRVLNCEDatasetV1
+from VLN_CE.habitat_extensions import maps
+from VLN_CE.habitat_extensions.task import RxRVLNCEDatasetV1
 
 cv2 = try_cv2_import()
 

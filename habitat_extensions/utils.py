@@ -19,7 +19,7 @@ from habitat_baselines.common.tensorboard_utils import TensorboardWriter
 from numpy import ndarray
 from torch import Tensor
 
-from habitat_extensions import maps
+from VLN_CE.habitat_extensions import maps
 
 cv2 = try_cv2_import()
 

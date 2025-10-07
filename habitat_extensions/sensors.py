@@ -10,10 +10,10 @@ from habitat.sims.habitat_simulator.actions import HabitatSimActions
 from habitat.tasks.nav.shortest_path_follower import ShortestPathFollower
 from numpy import ndarray
 
-from habitat_extensions.shortest_path_follower import (
+from VLN_CE.habitat_extensions.shortest_path_follower import (
     ShortestPathFollowerCompat,
 )
-from habitat_extensions.task import VLNExtendedEpisode
+from VLN_CE.habitat_extensions.task import VLNExtendedEpisode
 
 
 @registry.register_sensor(name="GlobalGPSSensor")

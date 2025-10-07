@@ -6,7 +6,7 @@ import numpy as np
 from habitat.config.default import CONFIG_FILE_SEPARATOR
 from habitat.config.default import Config as CN
 
-from habitat_extensions.config.default import (
+from VLN_CE.habitat_extensions.config.default import (
     get_extended_config as get_task_config,
 )
 
