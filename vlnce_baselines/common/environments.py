@@ -9,7 +9,7 @@ from habitat.utils.geometry_utils import quaternion_rotate_vector
 from habitat_baselines.common.baseline_registry import baseline_registry
 
 from habitat_extensions.discrete_planner import DiscretePathPlanner
-from habitat_extensions.utils import generate_video, navigator_video_frame
+from habitat_extensions.utils import  navigator_video_frame
 
 
 @baseline_registry.register_env(name="VLNCEDaggerEnv")

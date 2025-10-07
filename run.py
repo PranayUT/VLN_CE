@@ -1,17 +1,8 @@
 #!/usr/bin/env python3
-
-import argparse
-import os
-import random
-
 import numpy as np
-import torch
-from habitat import logger
+import argparse
 from habitat.datasets import make_dataset
-from habitat_baselines.common.baseline_registry import baseline_registry
 from vlnce_baselines.config.default import get_config
-import habitat_extensions  # noqa: F401
-import vlnce_baselines  # noqa: F401
 from my_agent import evaluate_agent
 
 def main():
@@ -61,6 +52,8 @@ def run_exp(exp_config: str, split_num: str, split_id: str, result_path: str, op
     dataset.episodes.sort(key=lambda ep: ep.episode_id)
     np.random.seed(42)
     dataset_split = dataset.get_splits(split_num)[split_id]
+    # evaluate_agent signature: (config, split_id, dataset, model_path, result_path)
+    # pass model_path=None for now (replace with real model path if available)
     evaluate_agent(config, split_id, dataset_split, result_path)
 
 
